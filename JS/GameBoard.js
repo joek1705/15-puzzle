@@ -100,7 +100,7 @@ function GameBoard(size) {
             let CurrRow = this.MovingSquare[0];
             let CurrCol = this.MovingSquare[1];
             let adjacents = this.findAdjacent(CurrRow,CurrCol);
-            let NewPos = adjacents[Math.floor(Math.random() * (adjacents.length - 1))];
+            let NewPos = adjacents[Math.floor(Math.random() * (adjacents.length))];
             this.swapSquares(NewPos[0],NewPos[1],CurrRow,CurrCol);
             this.MovingSquare[0] = NewPos[0];
             this.MovingSquare[1] = NewPos[1];
