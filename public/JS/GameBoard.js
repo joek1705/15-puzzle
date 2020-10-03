@@ -5,11 +5,16 @@
 function GameBoard(size) {
   this.size = size;
   this.BoardArray = new Array(size);
-  this.MovingSquare = [
-    size - 1,
-    size - 1,
-  ]; /* Holds row and column values of the square that moves */
+
+  /*
+  In order to faciliate movement functionality
+  within the board there is a dedicated square that moves.
+  This square is initially placed in the bottom right corner
+  */
+  this.MovingSquare;
+
   this.init = function () {
+    this.MovingSquare = [size - 1, size - 1];
     let count = size;
     for (var i = 0; i < size; i++) {
       this.BoardArray[i] = new Array(size);
@@ -22,8 +27,10 @@ function GameBoard(size) {
       count += size;
     }
   };
+
   /**
    * Finds the adjacent squares of the square located in (row,col)
+   * I.E those squares that are in the same row or column as the given square
    * @param {number} row is a positive integer
    * @param {number} col is a positive integer
    */
@@ -89,15 +96,21 @@ function GameBoard(size) {
    */
   this.MoveSquare = function (row, col) {
     let adjacents = this.findAdjacent(row, col);
+    let moved = false;
     adjacents.forEach((element) => {
-      //check if an adjacent square has the value of the moving square
+      // check if an adjacent square has the value of the moving square
       if (this.BoardArray[element[0]][element[1]] === this.size * this.size) {
         this.swapSquares(row, col, element[0], element[1]);
-        return;
+        moved = [element[0], element[1]];
       }
     });
+    return moved;
   };
 
+  /**
+   * Randomly moves the moving square a give number of times
+   * @param {Number} NumberOfShuffles
+   */
   this.shuffleBoard = function (NumberOfShuffles) {
     while (NumberOfShuffles > 0) {
       let CurrRow = this.MovingSquare[0];
@@ -111,6 +124,21 @@ function GameBoard(size) {
     }
   };
 
+  this.done = function () {
+    let squareCount = 1;
+    for (let row = 0; row < this.size; row++) {
+      for (let col = 0; col < this.size; col++) {
+        if (squareCount++ !== this.BoardArray[row][col]) {
+          return false;
+        }
+      }
+    }
+    return true;
+  };
+
+  /**
+   * Utility function for printing the gameboard's contents
+   */
   this.print = function () {
     this.BoardArray.forEach((element) => {
       console.log(element);
